@@ -1,0 +1,62 @@
+@import "lib/sass/variables";
+
+// Page defaults
+
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
+html {
+    box-sizing: border-box;
+    font-size: $font-size;
+}
+*, ::before, ::after {
+    box-sizing: inherit;
+}
+body {
+    font: 400 100%/1.5 $font-family, sans-serif;
+    background: #000;
+    color: #fff;
+    overflow: hidden;
+    user-select: none;
+
+    @media only screen and (min-width: $view-md) {
+        & {
+            font-size: 100% * (20 / 16);
+        }
+    }
+}
+img {
+    display: block;
+    max-width: 100%;
+    height: auto;
+}
+svg {
+    backface-visibility: hidden;
+}
+h1, h2, h3, h4, h5, h6 {
+    margin: 0;
+    font-weight: 500;
+    line-height: 1;
+}
+input, textarea, select, button {
+    font-family: $font-family, sans-serif;
+}
+small {
+    font-size: 1em * (12 / 16);
+}
+
+// Root element
+
+:global(#root) {
+    position: relative;
+    height: 100%;
+    z-index: 1;
+}
+
+// Fix
+
+@-ms-viewport {
+    width: device-width;
+}

@@ -1,0 +1,14 @@
+@import "lib/sass/variables.scss";
+
+.logo {
+    display: block;
+    width: 200px;
+    height: auto;
+    max-width: 100%;
+
+    @media only screen and (min-width: $view-md) {
+        & {
+            width: 250px;
+        }
+    }
+}

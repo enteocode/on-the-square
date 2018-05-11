@@ -1,0 +1,12 @@
+.DS_Store
+.idea
+.vscode
+
+/node_modules/
+/docs/
+
+*.log
+
+# If someone using the application as a package, then we won't need build process
+
+webpack.config.js

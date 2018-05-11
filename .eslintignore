@@ -1,0 +1,9 @@
+# Source related folders
+
+/node_modules/
+/docs/
+/resources/
+
+# Webpack configuration isn't make any sense on code-quality
+
+webpack.config.js

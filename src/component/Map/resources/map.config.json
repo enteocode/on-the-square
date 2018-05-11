@@ -1,0 +1,15 @@
+{
+    "style": "mapbox://styles/mapbox/dark-v9?optimize=true",
+    "minZoom": 15,
+    "maxZoom": 17,
+    "zoom": 17,
+    "bearing": 0,
+    "pitch": 60,
+    "keyboard": false,
+    "boxZoom": false,
+    "doubleClickZoom": false,
+    "scrollZoom": false,
+    "dragPan": false,
+    "dragRotate": false,
+    "localIdeographFontFamily": "Roboto"
+}

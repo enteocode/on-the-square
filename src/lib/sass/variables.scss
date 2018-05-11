@@ -1,0 +1,31 @@
+$unit: 12px;
+
+// Typography
+
+$font-size: 16px;
+$font-family: "Roboto";
+
+// UI
+
+$color-dark: #191a1a;
+
+// Media viewport breakpoints
+
+$view-md : 768px;
+$view-lg : 1024px;
+
+// Fragments
+
+%full-absolute {
+    position: absolute;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+}
+
+%flex-column {
+    display: flex;
+    flex: 1 0;
+    flex-direction: column;
+}

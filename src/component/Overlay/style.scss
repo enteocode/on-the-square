@@ -1,0 +1,53 @@
+@import "lib/sass/variables.scss";
+
+.container {
+    @extend %full-absolute;
+
+    display: flex;
+    justify-content: center;
+    background: $color-dark;
+    min-width: 320px;
+    transition: opacity .4s ease-out;
+    opacity: 0;
+    pointer-events: none;
+    z-index: 2;
+}
+
+.wrapper {
+    @extend %flex-column;
+
+    padding: (2 * $unit) (4 * $unit);
+    min-width: 320px;
+    max-width: 640px;
+    transform: scale(.9);
+    transition: .2s ease-out;
+    opacity: 0;
+    backface-visibility: hidden;
+}
+
+.visible {
+    opacity: 1;
+    pointer-events: all;
+
+    .wrapper {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+.header {
+    @extend %flex-column;
+
+    justify-content: flex-end;
+}
+
+.status {
+    @extend %flex-column;
+
+    padding-top: $unit;
+    color: #aaa;
+}
+
+.error {
+    color: #f08080;
+}
