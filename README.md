@@ -1,6 +1,6 @@
 ![On the Square][0]
 
-![build][1]
+![Build status][1]
 
 Discover hotels, restaurants and pubs around you.
 
@@ -20,5 +20,5 @@ The MIT License (MIT). Please see the [License File][Z] for more information.
 
 
 [0]: ./resources/logo.png
-[1]: https://img.shields.io/travis/enteocode/on-the-square/master.svg?style=flat-square
+[1]: https://api.travis-ci.com/enteocode/on-the-square.svg?branch=master
 [Z]: ./LICENSE
