@@ -1,6 +1,8 @@
 ![On the Square][0]
 
-Discover hotels, restaurants and pubs around you
+![build][1]
+
+Discover hotels, restaurants and pubs around you.
 
 ## Key Features
 
@@ -18,4 +20,5 @@ The MIT License (MIT). Please see the [License File][Z] for more information.
 
 
 [0]: ./resources/logo.png
+[1]: https://img.shields.io/travis/enteocode/on-the-square/master.svg?style=flat-square
 [Z]: ./LICENSE
