@@ -7,11 +7,8 @@
 
 ## Requirements
 
-This application is restricted to mobile devices, as the following 
-sensors are essential to use:
-
-- **Geolocation** (we don't store any information about you)
-- **DeviceOrientation**
+- Geolocation - we don't store any information about you
+- DeviceOrientation
 
 ## Key Features
 
