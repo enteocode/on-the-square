@@ -1,8 +1,17 @@
 ![On the Square][0]
+===================
 
-![Build status][1]
+[![Build Status][X]][Y]
 
-Discover hotels, restaurants and pubs around you.
+> Discover hotels, restaurants and pubs around you.
+
+## Requirements
+
+This application is restricted to mobile devices, as the following 
+sensors are essential to use:
+
+- **Geolocation** (we don't store any information about you)
+- **DeviceOrientation**
 
 ## Key Features
 
@@ -16,9 +25,10 @@ Discover hotels, restaurants and pubs around you.
 
 ## License
 
-The MIT License (MIT). Please see the [License File][Z] for more information.
+MIT © 2018, [Székely Ádám][Z]
 
 
 [0]: ./resources/logo.png
-[1]: https://api.travis-ci.com/enteocode/on-the-square.svg?branch=master
-[Z]: ./LICENSE
+[X]: https://api.travis-ci.com/enteocode/on-the-square.svg?branch=master
+[Y]: https://travis-ci.org/enteocode/node-ttfautohint
+[Z]: https://github.com/enteocode
