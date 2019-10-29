@@ -1,15 +1,19 @@
 {
     "plugins": [
-        ["transform-runtime", { "helpers": false, "regenerator" : true, "polyfill": false }]
+        ["@babel/plugin-proposal-class-properties", { "loose" : true }],
+        ["@babel/plugin-transform-runtime", { "helpers": false, "useESModules" : true }],
+
+        ["react-hot-loader/babel"]
     ],
     "presets": [
-        ["env", {
-            "targets": { "browsers": ["> 5%", "Firefox ESR"] },
+        ["@babel/preset-env", {
+            "useBuiltIns": "usage",
             "loose": true,
-            "modules": false
+            "modules": false,
+            "shippedProposals": true
         }],
-        ["react"],
-        ["stage-0"]
+        ["@babel/preset-flow"],
+        ["@babel/preset-react"]
     ],
     "comments": false
 }
