@@ -1,7 +1,7 @@
 import React from 'react';
 import AppContainer from 'component/AppContainer';
 import { Provider } from 'react-redux';
-import { hot } from 'react-hot-loader';
+import { hot } from 'react-hot-loader/root';
 import './index.scss';
 
 import type { Component } from 'react';
@@ -27,4 +27,4 @@ const App = ({ store }: Props): Component => (
     </Provider>
 );
 
-export default hot(module)(App);
+export default hot(App);

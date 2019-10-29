@@ -1,0 +1,12 @@
+# Browserlists definitions for different environments
+
+[production]
+
+> 1%
+last 3 versions
+not ie < 11
+Firefox ESR
+
+[development]
+
+last 1 Chrome versions
