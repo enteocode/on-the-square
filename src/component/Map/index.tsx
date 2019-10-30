@@ -1,6 +1,6 @@
-import * as React from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { toLngLatLike } from '../../lib/transformer';
-import mapbox, { Map as Mapbox, Marker, LngLatLike, MapboxEvent, Layer } from 'mapbox-gl';
+import mapbox, { Map as Mapbox, Marker, LngLatLike, Layer } from 'mapbox-gl';
 import style from './style.scss';
 
 /**
@@ -59,10 +59,37 @@ const createMarker = (className: string = style.marker, html: string = ''): HTML
  * @private
  */
 const createMarkerForVenue = ({ name, type }: Venue): HTMLElement => {
+    // This will be reduced into simple concatenated
+    // string by the build-process
+
     return createMarker(style.venue, [
         `<div>${name}</div>`,
         `<div class="${style.type}">${type}</div>`
     ].join(''));
+};
+
+/**
+ * @private
+ */
+const createMap = (container: HTMLElement, center: LngLatLike): Mapbox => {
+    return new Mapbox({
+        antialias : true,
+        center,
+        container,
+        style : 'mapbox://styles/mapbox/dark-v9?optimize=true',
+        minZoom : 15,
+        maxZoom : 16,
+        zoom : 15,
+        bearing : 0,
+        pitch : 60,
+        keyboard : false,
+        boxZoom : false,
+        doubleClickZoom : false,
+        scrollZoom : false,
+        dragPan : false,
+        dragRotate : false,
+        localIdeographFontFamily : 'Roboto'
+    });
 };
 
 /**
@@ -80,111 +107,90 @@ const addMarker = (position: LngLatLike, map: Mapbox, element: HTMLElement): Mar
 /**
  * @public
  */
-class Map extends React.Component<Props>
-{
-    container: React.RefObject<HTMLDivElement> = React.createRef();
+const Map: React.FunctionComponent<Props> = ({ location, venues, orientation, onLoaded }) => {
+    const [ markers, setMarkers ]= useState<Marker[]>([]);
+    const [ map, setMap ] = useState<Mapbox>();
+    const [ you, setYouMarker ] = useState<Marker>();
 
-    /**
-     * @type {Mapbox} Mapbox instance
-     */
-    map: Mapbox = null;
+    const container = useRef<HTMLDivElement>();
 
-    /**
-     * @type {Marker} The "You are here" marker
-     */
-    you: Marker = null;
+    useEffect(() => {
+        map && orientation && map.setBearing(360 - orientation.alpha).setPitch(orientation.beta);
+    }, [
+        orientation,
+        map
+    ]);
 
-    /**
-     * @type {Marker[]} Venue markers
-     */
-    markers: Marker[] = [];
-
-    componentDidMount() {
-        const { location, onLoaded } = this.props;
-
+    useEffect(() => {
+        if (! map || ! you) {
+            return;
+        }
         const center = toLngLatLike(location);
-        const map = this.map = new Mapbox({
-            antialias : true,
-            center,
-            container : this.container.current,
-            style : 'mapbox://styles/mapbox/dark-v9?optimize=true',
-            minZoom : 15,
-            maxZoom : 16,
-            zoom : 15,
-            bearing : 0,
-            pitch : 60,
-            keyboard : false,
-            boxZoom : false,
-            doubleClickZoom : false,
-            scrollZoom : false,
-            dragPan : false,
-            dragRotate : false,
-            localIdeographFontFamily : 'Roboto'
-        });
-        this.you = addMarker(center, map, createMarker(style.marker));
 
-        map.on('load', ({ target }: MapboxEvent) => {
-            target.addLayer(LAYER_EXTRUSION, getSymbolLayer(target).id);
+        you.setLngLat(center);
+        map.setCenter(center);
+    }, [
+        location,
+        map,
+        you
+    ]);
+
+    useEffect(() => {
+        if (! map || ! venues) {
+            return;
+        }
+        markers.forEach((marker: Marker) => {
+            marker.remove();
+        });
+        setMarkers(venues.map((venue: Venue): Marker => addMarker(venue, map, createMarkerForVenue(venue))));
+    }, [
+        venues,
+        map
+    ]);
+
+    useEffect(() => {
+        if (! container || ! location) {
+            return;
+        }
+        const coordinates = toLngLatLike(location);
+        const map = createMap(container.current, coordinates);
+        const marker = addMarker(coordinates, map, createMarker(style.marker));
+
+        map.on('load', () => {
+            map.addLayer(LAYER_EXTRUSION, getSymbolLayer(map).id);
             onLoaded();
         });
         map.touchZoomRotate.disableRotation();
-    }
 
-    componentWillUnmount() {
-        this.map.remove();
-    }
+        setMap(map);
+        setYouMarker(marker);
 
-    componentDidUpdate(props: Props) {
-        const { location, orientation, venues } = this.props;
+    }, [
+        container,
+        location
+    ]);
 
-        if (location !== props.location) {
-            this.setLocation(location);
-        }
-        if (venues !== props.venues) {
-            this.setVenues(venues);
-        }
-        if (orientation !== props.orientation) {
-            this.setOrientation(orientation);
-        }
-    }
+    useEffect(() => {
+        return () => {
+            map && map.remove();
+        };
+    }, []);
 
-    setLocation(location: LocationCoordinates) {
-        const center = toLngLatLike(location);
+    return (
+        <section className={ style.container } role="presentation">
+            <div ref={ container } className={ style.map }/>
 
-        this.you.setLngLat(center);
-        this.map.setCenter(center);
-    }
+            <footer className={ style.info }>
+                <svg viewBox="0 0 503.84 503.84" className={ style.icon }>
+                    <path d="M412.624 113.576c4.273-52.847-35.104-99.152-87.951-103.424-49.76-4.023-94.3 30.763-102.449 80.016a91.881 91.881 0 0 0-.736 11.792 95.887 95.887 0 0 0 38.224 76.416l-15.712 128-12.8-19.92c.192-2.4.448-4.8.448-7.2.344-48.6-38.775-88.277-87.375-88.621-44.956-.318-82.924 33.301-88.049 77.965a86.459 86.459 0 0 0-.656 10.704c.046 44.402 33.163 81.815 77.232 87.248a83.489 83.489 0 0 0 24-.368l53.536 83.056-3.2 26.016 31.76 3.904 4.624-37.52-85.008-131.872c-6.164-9.592-3.493-22.356 6-28.672 9.748-6.184 22.647-3.489 29.104 6.08l23.488 36.448c9.575 14.854 29.38 19.134 44.234 9.559A32.001 32.001 0 0 0 275.76 310.2l21.856-178.464c1.113-8.766 9.122-14.97 17.888-13.857a16 16 0 0 1 13.984 15.745 19.94 19.94 0 0 1-.112 2L316.24 242.728l42.08 18.48 12.8-29.296-20.304-8.928 4.032-32.96a95.312 95.312 0 0 0 57.776-76.448zM175.952 245.592c-29.205.001-52.88 23.676-52.879 52.881a52.881 52.881 0 0 0 8.479 28.719l4.896 7.6c-27.901-3.576-48.819-27.295-48.88-55.424.005-2.289.143-4.575.416-6.848 3.645-30.606 31.41-52.462 62.016-48.817a55.807 55.807 0 0 1 39.296 23.665 52.783 52.783 0 0 0-13.344-1.776zM319.36 85.864v.16c-26.222-3.308-50.161 15.268-53.469 41.491l-.035.285-1.232 10a63.68 63.68 0 0 1-11.2-35.856c.005-2.674.171-5.346.496-8 4.648-35.039 36.821-59.676 71.86-55.028 31.537 4.184 55.214 30.897 55.58 62.708a69.01 69.01 0 0 1-.496 8 63.347 63.347 0 0 1-20.992 40l1.264-10.32c3.2-26.287-15.493-50.2-41.776-53.44zM459.104 270.488l-12.864 29.296 22.944 10.08-11.552 94.064-55.44 57.68-4.544 37.04 31.744 3.904 3.264-26.464 55.44-57.68 15.744-128.272zM400.508 244.784l29.306 12.854-12.848 29.29-29.305-12.854zM187.312 60.6h-25.376l36.688-36.688L176 1.288l-36.688 36.688V12.6h-32v80h80zM59.312 188.6h32v-80h-80v32h25.376L0 177.288l22.624 22.624 36.688-36.688z"/>
+                </svg>
+                <small className={ style.text }>
+                    { `The compass works on Earth's magnetic field, so strong electrical interferences around you may affect it's operation` }
+                </small>
+            </footer>
 
-    setOrientation(orientation: Orientation) {
-        this.map.setBearing(360 - orientation.alpha).setPitch(orientation.beta);
-    }
-
-    setVenues(venues: Venue[]) {
-        this.markers.forEach((marker: Marker) => {
-            marker.remove();
-        });
-        this.markers = venues.map((venue: Venue): Marker => {
-            return addMarker(venue, this.map, createMarkerForVenue(venue));
-        });
-    }
-
-    render() {
-        return (
-            <section className={ style.container } role="presentation">
-                <div ref={ this.container } className={ style.map }/>
-
-                <footer className={ style.info }>
-                    <svg viewBox="0 0 503.84 503.84" className={ style.icon }>
-                        <path d="M412.624 113.576c4.273-52.847-35.104-99.152-87.951-103.424-49.76-4.023-94.3 30.763-102.449 80.016a91.881 91.881 0 0 0-.736 11.792 95.887 95.887 0 0 0 38.224 76.416l-15.712 128-12.8-19.92c.192-2.4.448-4.8.448-7.2.344-48.6-38.775-88.277-87.375-88.621-44.956-.318-82.924 33.301-88.049 77.965a86.459 86.459 0 0 0-.656 10.704c.046 44.402 33.163 81.815 77.232 87.248a83.489 83.489 0 0 0 24-.368l53.536 83.056-3.2 26.016 31.76 3.904 4.624-37.52-85.008-131.872c-6.164-9.592-3.493-22.356 6-28.672 9.748-6.184 22.647-3.489 29.104 6.08l23.488 36.448c9.575 14.854 29.38 19.134 44.234 9.559A32.001 32.001 0 0 0 275.76 310.2l21.856-178.464c1.113-8.766 9.122-14.97 17.888-13.857a16 16 0 0 1 13.984 15.745 19.94 19.94 0 0 1-.112 2L316.24 242.728l42.08 18.48 12.8-29.296-20.304-8.928 4.032-32.96a95.312 95.312 0 0 0 57.776-76.448zM175.952 245.592c-29.205.001-52.88 23.676-52.879 52.881a52.881 52.881 0 0 0 8.479 28.719l4.896 7.6c-27.901-3.576-48.819-27.295-48.88-55.424.005-2.289.143-4.575.416-6.848 3.645-30.606 31.41-52.462 62.016-48.817a55.807 55.807 0 0 1 39.296 23.665 52.783 52.783 0 0 0-13.344-1.776zM319.36 85.864v.16c-26.222-3.308-50.161 15.268-53.469 41.491l-.035.285-1.232 10a63.68 63.68 0 0 1-11.2-35.856c.005-2.674.171-5.346.496-8 4.648-35.039 36.821-59.676 71.86-55.028 31.537 4.184 55.214 30.897 55.58 62.708a69.01 69.01 0 0 1-.496 8 63.347 63.347 0 0 1-20.992 40l1.264-10.32c3.2-26.287-15.493-50.2-41.776-53.44zM459.104 270.488l-12.864 29.296 22.944 10.08-11.552 94.064-55.44 57.68-4.544 37.04 31.744 3.904 3.264-26.464 55.44-57.68 15.744-128.272zM400.508 244.784l29.306 12.854-12.848 29.29-29.305-12.854zM187.312 60.6h-25.376l36.688-36.688L176 1.288l-36.688 36.688V12.6h-32v80h80zM59.312 188.6h32v-80h-80v32h25.376L0 177.288l22.624 22.624 36.688-36.688z"/>
-                    </svg>
-                    <small className={ style.text }>
-                        { `The compass works on Earth's magnetic field, so strong electrical interferences around you may affect it's operation` }
-                    </small>
-                </footer>
-
-            </section>
-        );
-    }
-}
+        </section>
+    );
+};
 
 export default Map;
