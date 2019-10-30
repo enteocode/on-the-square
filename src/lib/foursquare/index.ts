@@ -1,12 +1,4 @@
-/**
- * @type {Object} Foursquare API Access Tokens
- */
-const AUTHENTICATION: Object = { client_id : process.env.FOURSQUARE_ID, client_secret : process.env.FOURSQUARE_SECRET };
-
-/**
- * @type {number} API version to request
- */
-const API_VERSION: number = 20180503;
+import { stringify } from 'querystringify';
 
 /**
  * @type {RegExp} Filter expression for Venue types
@@ -14,34 +6,18 @@ const API_VERSION: number = 20180503;
 const VENUE_TYPES: RegExp = /[hm]otel|atm|bank|bar|beer|bistro|breakfast|brewery|café|club|distillery|food|hostel|house|joint|lounge|marijuana|market|night|place|pub|restaurant|shop|smoke|store|taxi/iu;
 
 /**
- * @type {Object} Query extension for all Explore type requests
- */
-const QUERY_EXPLORE: Object = {
-    section: 'topPicks',
-    openNow: 1,
-    sortByDistance: 1
-};
-
-/**
- * @private Builds a request query-string
- * @todo Use querystringify
- */
-const buildQuery = (query: Object): string => {
-    const keys = Object.keys(query);
-    const data = keys.reduce((acc: string[], key: string): string[] => acc.concat(`${key}=${encodeURIComponent(query[key])}`),
-        []
-    );
-    return data.join('&');
-};
-
-/**
  * @private Builds a Foursquare API requests
  */
-const buildRequest = (id: string, query: Object = {}): string => {
-    return `https://api.foursquare.com/v2/venues/${id}?${buildQuery({ v : API_VERSION,
-        ... AUTHENTICATION,
-        ... query
-    })}`;
+const createApiRequestUrl = (id: string, coordinates: string = ''): string => {
+    return `https://api.foursquare.com/v2/venues/${id}${stringify({
+        client_id : process.env.FOURSQUARE_ID, 
+        client_secret : process.env.FOURSQUARE_SECRET,
+        ll : coordinates,
+        openNow : 1,
+        section : 'topPicks',
+        sortByDistance : 1,
+        v : 20180503
+    }, true)}`;
 };
 
 /**
@@ -77,7 +53,7 @@ const getVenuesByResponse = ({ meta, response }): Venue[] => {
  */
 export const getVenues = async ({ lat, lng }: LocationCoordinates): Promise<Venue[]> => {
     const coordinates = [ lat, lng ].join(',');
-    const request = buildRequest('explore', { ll : coordinates, ... QUERY_EXPLORE });
+    const request = createApiRequestUrl('explore', coordinates);
     const response = await fetch(request);
 
     if (response.status !== 200) {

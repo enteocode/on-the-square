@@ -22,7 +22,7 @@ https://enteocode.github.io/on-the-square
 
 ## License
 
-MIT © 2019, [Székely Ádám][Z]
+MIT © 2019, [Adam Szekely][Z]
 
 
 [0]: ./resources/logo.png
