@@ -15,13 +15,13 @@
 const path = require('path');
 
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const DotenvPlugin = require('dotenv-webpack');
 const TerserPlugin = require('terser-webpack-plugin');
 
 // Definitions
 
 const isDevelopment = process.env.NODE_ENV !== 'production';
 
-const MODE_DEVELOPMENT = 'development';
 const HOST = 'localhost';
 const PORT = 3000;
 
@@ -125,6 +125,7 @@ module.exports = {
         extensions : [ '.js', '.json', '.ts', '.tsx' ]
     },
     plugins : [
+        new DotenvPlugin({ safe : true, systemvars : true }),
         new MiniCssExtractPlugin({ filename : '[name].css' })
     ],
     module : {
