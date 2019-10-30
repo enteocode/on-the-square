@@ -26,6 +26,7 @@ export type Props = {
 
 /**
  * @private
+ * @see https://developers.google.com/web/fundamentals/native-hardware/device-orientation
  */
 const getOrientationEventName = (): string => {
     if ('ondeviceorientationabsolute' in window) {
@@ -54,7 +55,7 @@ class AppContainer extends React.PureComponent<Props>
             geolocation.watchPosition(this.handleLocationChange, this.handleLocationError);
 
             if (eventName) {
-                window.addEventListener(eventName, this.handleOrientationChange);
+                window.addEventListener(eventName, this.handleOrientationChange, false);
             }
         }
         else {

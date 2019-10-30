@@ -24,6 +24,7 @@ const LAYER_EXTRUSION: Layer = {
     'id' : '3d-buildings',
     'source' : 'composite',
     'source-layer' : 'building',
+    'minzoom' : 15,
     'filter' : [
         '==',
         'extrude',
@@ -39,13 +40,6 @@ const LAYER_EXTRUSION: Layer = {
 };
 
 // Helpers
-
-/**
- * @private
- */
-const easing = (time: number): number => {
-    return time;
-};
 
 /**
  * @private
@@ -110,12 +104,13 @@ class Map extends React.Component<Props>
 
         const center = toLngLatLike(location);
         const map = this.map = new Mapbox({
+            antialias : true,
             center,
             container : this.container.current,
             style : 'mapbox://styles/mapbox/dark-v9?optimize=true',
             minZoom : 15,
-            maxZoom : 17,
-            zoom : 17,
+            maxZoom : 16,
+            zoom : 15,
             bearing : 0,
             pitch : 60,
             keyboard : false,
@@ -161,12 +156,7 @@ class Map extends React.Component<Props>
     }
 
     setOrientation(orientation: Orientation) {
-        this.map.easeTo({
-            bearing: 360 - orientation.alpha,
-            pitch: orientation.beta,
-            easing,
-            duration: 100
-        });
+        this.map.setBearing(360 - orientation.alpha).setPitch(orientation.beta);
     }
 
     setVenues(venues: Venue[]) {

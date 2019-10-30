@@ -7,7 +7,7 @@
     justify-content: center;
     background: $color-dark;
     min-width: 320px;
-    transition: opacity .4s ease-out;
+    transition: opacity 3s ease-out;
     opacity: 0;
     pointer-events: none;
     z-index: 2;
@@ -19,8 +19,8 @@
     padding: (2 * $unit) (4 * $unit);
     min-width: 320px;
     max-width: 640px;
-    transform: scale(.9);
-    transition: .2s ease-out;
+    transform: scale(.8);
+    transition: 900ms ease-out;
     opacity: 0;
     backface-visibility: hidden;
 }
