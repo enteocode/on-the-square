@@ -1,28 +1,28 @@
 ![On the Square][0]
-===================
+================
 
 [![Build Status][X]][Y]
 
-> Discover hotels, restaurants and pubs around you.
+Discover hotels, restaurants and pubs around you
 
 ## Requirements
 
 - Geolocation - we don't store any information about you
 - DeviceOrientation
 
-## Key Features
-
-- Easy to use
-
 ## Highlights
 
-- Type-strict as possible (ESLint)
+- Type-strict as possible (TypeScript)
 - ES7
-- Immutability
+- Immutable
+
+## Demo
+
+https://enteocode.github.io/on-the-square
 
 ## License
 
-MIT © 2018, [Székely Ádám][Z]
+MIT © 2019, [Székely Ádám][Z]
 
 
 [0]: ./resources/logo.png

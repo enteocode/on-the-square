@@ -1,0 +1,20 @@
+{
+    "compilerOptions": {
+        "esModuleInterop": true,
+        "noEmit": true,
+        "target": "esnext",
+        "moduleResolution": "node",
+        "isolatedModules": true,
+        "jsx": "react",
+        "noImplicitAny": false,
+        "removeComments": true,
+        "preserveConstEnums": true
+    },
+    "include": [
+        "src",
+        "src/lib/defs/*.d.ts"
+    ],
+    "exclude": [
+        "node_modules"
+    ]
+}

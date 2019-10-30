@@ -1,18 +1,16 @@
-import { APP_MESSAGE, APP_SET_CENTER } from 'action/types';
-
-import type { Action } from 'redux';
-import type { LatLngObject } from 'lib/defs';
+import { APP_MESSAGE, APP_SET_CENTER } from '../../action/application/types';
+import { AnyAction } from 'redux';
 
 // Definitions
 
 export type State = {
-    center: LatLngObject,
+    center: LocationCoordinates,
     message: string,
     error: boolean
 };
 
 /**
- * @type {State}
+ * @private
  */
 const initialState: State = {
     center: null,
@@ -21,15 +19,9 @@ const initialState: State = {
 };
 
 /**
- * Application reducer
- *
  * @public
- * @param {State}  state
- * @param {string} type
- * @param {Action} action
- * @return {State}
  */
-const reducer = (state: State = initialState, { type, ...action }: Action): State => {
+const reducer = (state: State = initialState, { type, ...action }: AnyAction): State => {
     switch (type) {
         case APP_MESSAGE :
             return { ...state, ...action };

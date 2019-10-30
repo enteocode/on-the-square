@@ -1,20 +1,17 @@
-import React from 'react';
-import * as style from './style.scss';
-
-import type { Component } from 'react';
+import * as React from 'react';
+import style from './style.scss';
 
 /**
- * Logo of the application
+ * It is better to store as an inline asset, because appears only once and
+ * no need of additional HTTP request
  *
  * @public
- * @return {Component}
- * @constructor
  */
-const Logo = (): Component => (
+const Logo: React.FunctionComponent = () => (
     <svg
-        className={style.logo}
-        width={250}
-        height={40}
+        className={ style.logo }
+        width={ 250 }
+        height={ 40 }
         viewBox="0 0 250 36.269"
         preserveAspectRatio="xMinYMid meet"
     >
