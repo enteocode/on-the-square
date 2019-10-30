@@ -1,7 +1,7 @@
 /**
  * @type {Object} Foursquare API Access Tokens
  */
-const AUTHENTICATION: Object = {client_id : '5S11GGEZ2A5JZPISTD4CPMQN5CL0NYKNF0AHJUK4AAOLVV1L', client_secret: 'RFAWFOP4KERR3XESXVM3VI5K0UKR42TEP2XQW5IPTIZYJNK4' };
+const AUTHENTICATION: Object = { client_id : process.env.FOURSQUARE_ID, client_secret : process.env.FOURSQUARE_SECRET };
 
 /**
  * @type {number} API version to request
@@ -38,7 +38,10 @@ const buildQuery = (query: Object): string => {
  * @private Builds a Foursquare API requests
  */
 const buildRequest = (id: string, query: Object = {}): string => {
-    return `https://api.foursquare.com/v2/venues/${id}?${buildQuery({ v: API_VERSION, ... AUTHENTICATION, ... query })}`;
+    return `https://api.foursquare.com/v2/venues/${id}?${buildQuery({ v : API_VERSION,
+        ... AUTHENTICATION,
+        ... query
+    })}`;
 };
 
 /**

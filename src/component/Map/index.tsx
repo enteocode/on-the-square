@@ -6,7 +6,7 @@ import style from './style.scss';
 /**
  * @public
  */
-mapbox.accessToken = 'pk.eyJ1IjoiYWRhbS1zemVrZWx5IiwiYSI6ImNqYW1jOTNjMjRoNGcyd2p1ZXpmbXRwdDUifQ.7wMdv63YzYVjPI9HVaZC6A';
+mapbox.accessToken = process.env.MAPBOX_TOKEN;
 
 // Definitions
 
