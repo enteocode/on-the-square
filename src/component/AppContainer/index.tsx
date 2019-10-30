@@ -26,6 +26,7 @@ export type Props = {
 
 /**
  * @private
+ * @see https://developers.google.com/web/fundamentals/native-hardware/device-orientation
  */
 const getOrientationEventName = (): string => {
     if ('ondeviceorientationabsolute' in window) {
@@ -54,7 +55,7 @@ class AppContainer extends React.PureComponent<Props>
             geolocation.watchPosition(this.handleLocationChange, this.handleLocationError);
 
             if (eventName) {
-                window.addEventListener(eventName, this.handleOrientationChange);
+                window.addEventListener(eventName, this.handleOrientationChange, false);
             }
         }
         else {
@@ -63,20 +64,22 @@ class AppContainer extends React.PureComponent<Props>
     }
 
     handleOrientationChange = ({ alpha, beta, webkitCompassHeading }: DeviceOrientationEvent & { webkitCompassHeading: number }) => {
+        const { dispatch } = this.props;
+
         if (alpha === null) {
             return;
         }
-        this.props.dispatch(setOrientation(
-            webkitCompassHeading || alpha,
-            beta
-        ));
+        requestAnimationFrame(() => {
+            dispatch(setOrientation(webkitCompassHeading || alpha, beta));
+        });
     };
 
     handleLocationChange = ({ coords : { latitude, longitude } }: Position) => {
-        this.props.dispatch(setLocation(
-            latitude,
-            longitude
-        ));
+        const { dispatch } = this.props;
+
+        requestAnimationFrame(() => {
+            dispatch(setLocation(latitude, longitude));
+        });
     };
 
     handleLocationError = (e: PositionError) => {
