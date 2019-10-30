@@ -1,7 +1,6 @@
 {
     "parser" : "babel-eslint",
     "plugins" : [
-        "flowtype",
         "react"
     ],
     "extends" : [
@@ -19,28 +18,14 @@
         "no-unused-vars": 0,
         "no-undef": 0,
         "no-bitwise" : 2,
-        "no-console" : 0,
-        "flowtype/define-flow-type" : 1,
-        "flowtype/delimiter-dangle" : [1, "never"],
-        "flowtype/generic-spacing" : [1, "never"],
-        "flowtype/no-dupe-keys" : 2,
-        "flowtype/no-types-missing-file-annotation" : 0,
-        "flowtype/object-type-delimiter" : [1, "comma"],
-        "flowtype/require-parameter-type" : 0,
-        "flowtype/require-return-type" : [0, "always", { "annotateUndefined": "never" }],
-        "flowtype/use-flow-type" : 1,
-        "flowtype/valid-syntax" : 1
+        "no-console" : 0
     },
     "parserOptions": {
         "jsx": true
     },
     "settings" : {
         "react": {
-            "version": "16.8",
-            "flowVersion": "0.96"
-        },
-        "flowtype": {
-            "onlyFilesWithFlowAnnotation": false
+            "version": "16.11"
         }
     }
 }

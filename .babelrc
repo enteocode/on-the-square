@@ -6,13 +6,13 @@
         ["react-hot-loader/babel"]
     ],
     "presets": [
+        ["@babel/preset-typescript"],
         ["@babel/preset-env", {
             "useBuiltIns": "usage",
             "loose": true,
             "modules": false,
             "shippedProposals": true
         }],
-        ["@babel/preset-flow"],
         ["@babel/preset-react"]
     ],
     "comments": false

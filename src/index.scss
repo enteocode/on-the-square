@@ -1,4 +1,4 @@
-@import "lib/sass/variables";
+@import "./lib/sass/variables";
 
 // Page defaults
 
@@ -7,13 +7,16 @@ html, body {
     margin: 0;
     padding: 0;
 }
+
 html {
     box-sizing: border-box;
     font-size: $font-size;
 }
+
 *, ::before, ::after {
     box-sizing: inherit;
 }
+
 body {
     font: 400 100%/1.5 $font-family, sans-serif;
     background: #000;
@@ -27,22 +30,27 @@ body {
         }
     }
 }
+
 img {
     display: block;
     max-width: 100%;
     height: auto;
 }
+
 svg {
     backface-visibility: hidden;
 }
+
 h1, h2, h3, h4, h5, h6 {
     margin: 0;
     font-weight: 500;
     line-height: 1;
 }
+
 input, textarea, select, button {
     font-family: $font-family, sans-serif;
 }
+
 small {
     font-size: 1em * (12 / 16);
 }

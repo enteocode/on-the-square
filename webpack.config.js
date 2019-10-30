@@ -50,11 +50,12 @@ const getLocalIdentName = (isDevelopment) => {
  */
 module.exports = {
     devtool : isDevelopment ? 'inline-source-map' : void 0,
+    mode : 'production',
     stats : {
         children : false
     },
     entry : {
-        app : [ 'react-hot-loader/patch', 'whatwg-fetch', './src/bootstrap.js' ]
+        app : [ 'react-hot-loader/patch', 'whatwg-fetch', './src/bootstrap.tsx' ]
     },
     output : {
         filename : '[name].js',
@@ -72,16 +73,15 @@ module.exports = {
                     },
                     compress : {
                         drop_console : true,
-                        ecma : 5,
-                        warnings : false,
-                        passes : 3
+                        passes : 3,
+                        warnings : false
                     },
                     mangle : {
                         safari10 : true
                     },
                     output : {
                         ascii_only : false,
-                        ecma : 5,
+                        ecma : 3,
                         comments : false
                     }
                 },
@@ -122,14 +122,7 @@ module.exports = {
         fs : 'empty'
     },
     resolve : {
-        // To make the traversing easier, we creating aliases for all of the logical groups
-
-        alias : {
-            action    : resolve('src/action'),
-            component : resolve('src/component'),
-            lib       : resolve('src/lib'),
-            reducer   : resolve('src/reducer')
-        }
+        extensions : [ '.js', '.json', '.ts', '.tsx' ]
     },
     plugins : [
         new MiniCssExtractPlugin({ filename : '[name].css' })
@@ -138,7 +131,7 @@ module.exports = {
         strictExportPresence : true,
         rules : [
             {
-                test : /\.js$/,
+                test : /\.[tj]sx?$/,
                 exclude : /node_modules/,
                 use : [
                     {
@@ -161,6 +154,9 @@ module.exports = {
                 use : [
                     ! isDevelopment ? MiniCssExtractPlugin.loader : {
                         loader : 'style-loader'
+                    },
+                    {
+                        loader : 'css-modules-typescript-loader'
                     },
                     {
                         loader : 'css-loader',
