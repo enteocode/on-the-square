@@ -3,7 +3,7 @@
     "version": "1.0.0",
     "private": true,
     "description": "Discover hotels, restaurants and pubs around you",
-    "main": "src/index.js",
+    "main": "src/index.tsx",
     "license": "MIT",
     "homepage": "https://enteocode.github.io/on-the-square",
     "scripts": {
