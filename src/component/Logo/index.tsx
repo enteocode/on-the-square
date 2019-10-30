@@ -27,7 +27,6 @@ const Logo: React.FunctionComponent = () => (
         <path d="M231.692,38.088h-5.64l-5.964-16.805V18.024H225.4V6.558h-6.819v31.53h-5.409V1.912h14.355q3.259,0,3.259,3.329V18.393q0,2.288-1.549,2.959a11.136,11.136,0,0,1-3.514.347Z" transform="translate(0 -1.865)" fill="#fff"/>
         <path d="M250,38.088H235V1.912h14.864V6.7h-9.454V17.261h8.137v4.693h-8.137V33.3H250v4.785Z" transform="translate(0 -1.865)" fill="#fff"/>
     </svg>
-
 );
 
-export default Logo;
+export default React.memo(Logo);

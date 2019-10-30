@@ -1,12 +1,10 @@
 {
     "parser" : "babel-eslint",
     "plugins" : [
-        "react"
+        "react",
+        "react-hooks"
     ],
-    "extends" : [
-        "eslint:recommended",
-        "plugin:react/recommended"
-    ],
+    "extends" : ["eslint:recommended", "plugin:react/recommended"],
     "env" : {
         "browser" : true,
         "es6" : true,

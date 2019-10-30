@@ -14,24 +14,19 @@ export interface Props {
 /**
  * @public
  */
-class Overlay extends React.PureComponent<Props>
-{
-    render() {
-        const { message, error, isVisible } = this.props;
-
-        return (
-            <section className={ classNames(style.container, isVisible && style.visible) }>
-                <div className={ style.wrapper }>
-                    <header className={ style.header }>
-                        <Logo/>
-                    </header>
-                    <small className={ classNames(style.status, error && style.error) }>
-                        { message }
-                    </small>
-                </div>
-            </section>
-        );
-    }
-}
+const Overlay: React.FunctionComponent<Props> = ({ message, error, isVisible }) => {
+    return (
+        <section className={ classNames(style.container, isVisible && style.visible) }>
+            <div className={ style.wrapper }>
+                <header className={ style.header }>
+                    <Logo/>
+                </header>
+                <small className={ classNames(style.status, error && style.error) }>
+                    { message }
+                </small>
+            </div>
+        </section>
+    );
+};
 
 export default Overlay;

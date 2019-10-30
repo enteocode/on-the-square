@@ -50,7 +50,6 @@ const getLocalIdentName = (isDevelopment) => {
  */
 module.exports = {
     devtool : isDevelopment ? 'inline-source-map' : void 0,
-    mode : 'production',
     stats : {
         children : false
     },
@@ -122,7 +121,15 @@ module.exports = {
         fs : 'empty'
     },
     resolve : {
-        extensions : [ '.js', '.json', '.ts', '.tsx' ]
+        alias : {
+            'react-dom' : '@hot-loader/react-dom'
+        },
+        extensions : [
+            '.js',
+            '.json',
+            '.ts',
+            '.tsx'
+        ]
     },
     plugins : [
         new DotenvPlugin({ safe : true, systemvars : true }),
