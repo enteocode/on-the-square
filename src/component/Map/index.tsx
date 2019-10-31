@@ -59,9 +59,6 @@ const createMarker = (className: string = style.marker, html: string = ''): HTML
  * @private
  */
 const createMarkerForVenue = ({ name, type }: Venue): HTMLElement => {
-    // This will be reduced into simple concatenated
-    // string by the build-process
-
     return createMarker(style.venue, [
         `<div>${name}</div>`,
         `<div class="${style.type}">${type}</div>`

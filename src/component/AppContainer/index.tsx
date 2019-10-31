@@ -83,11 +83,8 @@ const AppContainer: React.FunctionComponent<Props> = () => {
 
         if (geolocation) {
             dispatch(setMessage('Requesting location'));
+            geolocation.watchPosition(handleLocationChange, handleLocationError);
 
-            geolocation.watchPosition(
-                handleLocationChange,
-                handleLocationError
-            );
             if (eventName) {
                 window.addEventListener(eventName, handleOrientationChange, false);
             }
