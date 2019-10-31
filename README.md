@@ -27,5 +27,5 @@ MIT © 2019, [Adam Szekely][Z]
 
 [0]: ./resources/logo.png
 [X]: https://api.travis-ci.com/enteocode/on-the-square.svg?branch=master
-[Y]: https://travis-ci.org/enteocode/node-ttfautohint
+[Y]: https://travis-ci.org/enteocode/on-the-square
 [Z]: https://github.com/enteocode
