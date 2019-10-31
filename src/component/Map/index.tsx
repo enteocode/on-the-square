@@ -146,24 +146,25 @@ const Map: React.FunctionComponent<Props> = ({ location, venues, orientation, on
     ]);
 
     useEffect(() => {
-        if (! container || ! location) {
+        if (map || ! container || ! location) {
             return;
         }
         const coordinates = toLngLatLike(location);
-        const map = createMap(container.current, coordinates);
-        const marker = addMarker(coordinates, map, createMarker(style.marker));
+        const mapbox = createMap(container.current, coordinates);
+        const marker = addMarker(coordinates, mapbox, createMarker(style.marker));
 
-        map.on('load', () => {
-            map.addLayer(LAYER_EXTRUSION, getSymbolLayer(map).id);
+        mapbox.on('load', () => {
+            mapbox.addLayer(LAYER_EXTRUSION, getSymbolLayer(mapbox).id);
             onLoaded();
         });
-        map.touchZoomRotate.disableRotation();
+        mapbox.touchZoomRotate.disableRotation();
 
-        setMap(map);
+        setMap(mapbox);
         setYouMarker(marker);
 
     }, [
         container,
+        map,
         location
     ]);
 
