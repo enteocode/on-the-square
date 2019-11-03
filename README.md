@@ -16,7 +16,7 @@ Discover hotels, restaurants and pubs around you
 - ES7
 - Immutable
 
-## Demo
+## Online Demo
 
 https://enteocode.github.io/on-the-square
 
