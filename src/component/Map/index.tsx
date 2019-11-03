@@ -4,7 +4,7 @@ import mapbox, { Map as Mapbox, Marker, LngLatLike, Layer } from 'mapbox-gl';
 import style from './style.scss';
 
 /**
- * @public
+ * @global
  */
 mapbox.accessToken = process.env.MAPBOX_TOKEN;
 
