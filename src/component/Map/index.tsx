@@ -51,15 +51,15 @@ const getSymbolLayer = (map: Mapbox) => {
 /**
  * @private
  */
-const createMarker = (className: string = style.marker, html: string = ''): HTMLDivElement => {
+const createElement = (className: string = style.marker, html: string = ''): HTMLDivElement => {
     return Object.assign(document.createElement('div'), { className, innerHTML : html });
 };
 
 /**
  * @private
  */
-const createMarkerForVenue = ({ name, type }: Venue): HTMLElement => {
-    return createMarker(style.venue, [
+const createElementForVenue = ({ name, type }: Venue): HTMLElement => {
+    return createElement(style.venue, [
         `<div>${name}</div>`,
         `<div class="${style.type}">${type}</div>`
     ].join(''));
@@ -92,11 +92,10 @@ const createMap = (container: HTMLElement, center: LngLatLike): Mapbox => {
 /**
  * @private
  */
-const addMarker = (position: LngLatLike, map: Mapbox, element: HTMLElement): Marker => {
+const createMarker = (position: LngLatLike, element: HTMLElement): Marker => {
     const marker = new Marker(element);
 
     marker.setLngLat(position);
-    marker.addTo(map);
 
     return marker;
 };
@@ -152,10 +151,13 @@ const Map: React.FunctionComponent<Props> = ({ location, venues, orientation, on
             return;
         }
         setRendered(true);
+
         markers.forEach((marker: Marker) => {
             marker.remove();
         });
-        setMarkers(venues.map((venue: Venue): Marker => addMarker(venue, map, createMarkerForVenue(venue))));
+        setMarkers(venues.map((venue: Venue): Marker => {
+            return createMarker(venue, createElementForVenue(venue)).addTo(map);
+        }));
     }, [
         venues,
         map,
@@ -171,7 +173,7 @@ const Map: React.FunctionComponent<Props> = ({ location, venues, orientation, on
         }
         const coordinates = toLngLatLike(location);
         const mapbox = createMap(container.current, coordinates);
-        const marker = addMarker(coordinates, mapbox, createMarker(style.marker));
+        const marker = createMarker(coordinates, createElement(style.marker)).addTo(mapbox);
 
         mapbox.on('load', () => {
             mapbox.addLayer(LAYER_EXTRUSION, getSymbolLayer(mapbox).id);
