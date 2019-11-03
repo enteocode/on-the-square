@@ -4,7 +4,7 @@ import mapbox, { Map as Mapbox, Marker, LngLatLike, Layer } from 'mapbox-gl';
 import style from './style.scss';
 
 /**
- * @public
+ * @global
  */
 mapbox.accessToken = process.env.MAPBOX_TOKEN;
 
@@ -51,15 +51,15 @@ const getSymbolLayer = (map: Mapbox) => {
 /**
  * @private
  */
-const createMarker = (className: string = style.marker, html: string = ''): HTMLDivElement => {
+const createElement = (className: string = style.marker, html: string = ''): HTMLDivElement => {
     return Object.assign(document.createElement('div'), { className, innerHTML : html });
 };
 
 /**
  * @private
  */
-const createMarkerForVenue = ({ name, type }: Venue): HTMLElement => {
-    return createMarker(style.venue, [
+const createElementForVenue = ({ name, type }: Venue): HTMLElement => {
+    return createElement(style.venue, [
         `<div>${name}</div>`,
         `<div class="${style.type}">${type}</div>`
     ].join(''));
@@ -92,11 +92,10 @@ const createMap = (container: HTMLElement, center: LngLatLike): Mapbox => {
 /**
  * @private
  */
-const addMarker = (position: LngLatLike, map: Mapbox, element: HTMLElement): Marker => {
+const createMarker = (position: LngLatLike, element: HTMLElement): Marker => {
     const marker = new Marker(element);
 
     marker.setLngLat(position);
-    marker.addTo(map);
 
     return marker;
 };
@@ -108,8 +107,11 @@ const Map: React.FunctionComponent<Props> = ({ location, venues, orientation, on
     const [ markers, setMarkers ]= useState<Marker[]>([]);
     const [ map, setMap ] = useState<Mapbox>();
     const [ you, setYouMarker ] = useState<Marker>();
+    const [ rendered, setRendered ] = useState<boolean>(false);
 
     const container = useRef<HTMLDivElement>();
+
+    // Handle orientation change
 
     useEffect(() => {
         map && orientation && map.setBearing(360 - orientation.alpha).setPitch(orientation.beta);
@@ -117,6 +119,8 @@ const Map: React.FunctionComponent<Props> = ({ location, venues, orientation, on
         orientation,
         map
     ]);
+
+    // Handle map center
 
     useEffect(() => {
         if (! map || ! you) {
@@ -132,18 +136,36 @@ const Map: React.FunctionComponent<Props> = ({ location, venues, orientation, on
         you
     ]);
 
+    // Handle venue change (trigger Marker redraw)
+
     useEffect(() => {
-        if (! map || ! venues) {
+        venues && setRendered(false);
+    }, [
+        venues
+    ]);
+
+    // Handle Markers
+
+    useEffect(() => {
+        if (! map || ! venues || rendered) {
             return;
         }
+        setRendered(true);
+
         markers.forEach((marker: Marker) => {
             marker.remove();
         });
-        setMarkers(venues.map((venue: Venue): Marker => addMarker(venue, map, createMarkerForVenue(venue))));
+        setMarkers(venues.map((venue: Venue): Marker => {
+            return createMarker(venue, createElementForVenue(venue)).addTo(map);
+        }));
     }, [
         venues,
-        map
+        map,
+        markers,
+        rendered
     ]);
+
+    // Handle Mapbox
 
     useEffect(() => {
         if (map || ! container || ! location) {
@@ -151,11 +173,11 @@ const Map: React.FunctionComponent<Props> = ({ location, venues, orientation, on
         }
         const coordinates = toLngLatLike(location);
         const mapbox = createMap(container.current, coordinates);
-        const marker = addMarker(coordinates, mapbox, createMarker(style.marker));
+        const marker = createMarker(coordinates, createElement(style.marker)).addTo(mapbox);
 
         mapbox.on('load', () => {
             mapbox.addLayer(LAYER_EXTRUSION, getSymbolLayer(mapbox).id);
-            onLoaded();
+            onLoaded && onLoaded();
         });
         mapbox.touchZoomRotate.disableRotation();
 
@@ -165,14 +187,17 @@ const Map: React.FunctionComponent<Props> = ({ location, venues, orientation, on
     }, [
         container,
         map,
-        location
+        location,
+        onLoaded
     ]);
 
     useEffect(() => {
         return () => {
             map && map.remove();
         };
-    }, []);
+    }, [
+        map
+    ]);
 
     return (
         <section className={ style.container } role="presentation">

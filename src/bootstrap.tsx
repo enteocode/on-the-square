@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React, { StrictMode } from 'react';
 import { setConfig } from 'react-hot-loader';
 import { render } from 'react-dom';
 import { Store } from 'redux';
@@ -16,6 +16,17 @@ process.env.NODE_ENV !== 'production' && setConfig({
  */
 const store: Store = createStore();
 
+/**
+ * @private
+ */
+const rootEl: HTMLElement = document.getElementById('root');
+
 // Rendering application into DOM
 
-render(<App store={ store }/>, document.getElementById('root'));
+render(
+    <StrictMode>
+        <App store={ store }/>
+    </StrictMode>,
+
+    rootEl
+);
