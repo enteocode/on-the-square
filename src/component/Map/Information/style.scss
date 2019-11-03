@@ -1,0 +1,28 @@
+@import "../../../lib/sass/variables.scss";
+
+.info {
+    position: absolute;
+    display: flex;
+    align-items: flex-start;
+    left: $unit;
+    bottom: $unit;
+    padding: $unit;
+    background: rgba(#000, .6);
+    vertical-align: top;
+    max-width: 260px;
+    pointer-events: none;
+}
+
+.text {
+    flex: 1 1 0;
+    font-size: 9px;
+    font-weight: 300;
+    opacity: .8;
+}
+
+.icon {
+    display: inline-block;
+    margin-right: 12px;
+    flex: 0 (3 * $unit);
+    fill: #fff;
+}

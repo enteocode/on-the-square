@@ -21,33 +21,6 @@ $marker-color : #D90023;
     z-index: 1;
 }
 
-.info {
-    position: absolute;
-    display: flex;
-    align-items: flex-start;
-    left:    $unit;
-    bottom:  $unit;
-    padding: $unit;
-    background: rgba(#000, .6);
-    vertical-align: top;
-    max-width: 260px;
-    pointer-events: none;
-}
-
-.text {
-    flex: 1 1 0;
-    font-size: 9px;
-    font-weight: 300;
-    opacity: .8;
-}
-
-.icon {
-    display: inline-block;
-    margin-right: 12px;
-    flex: 0 (3 * $unit);
-    fill: #fff;
-}
-
 .map {
     height: 100%;
     overflow: hidden;
@@ -56,8 +29,6 @@ $marker-color : #D90023;
 .map :global(.mapboxgl-control-container) {
     display: none;
 }
-
-// You are here
 
 .marker {
     width:  $marker-size;
@@ -97,8 +68,6 @@ $marker-color : #D90023;
     background: rgba(#000, .1);
     border-radius: 50%;
 }
-
-// Venues
 
 .venue {
     padding: round($unit / 3);
