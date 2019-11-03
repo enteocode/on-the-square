@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect } from 'react';
+import React, { Fragment, useEffect, useCallback } from 'react';
 import Map from '../Map';
 import Overlay from '../Overlay';
 import { AnyAction } from 'redux'
@@ -53,38 +53,51 @@ const AppContainer: React.FunctionComponent<Props> = () => {
         orientation
     }));
 
-    const handleMapLoadedEvent = () => {
+    const handleMapLoadedEvent = useCallback(() => {
         dispatch(setMessage(''));
-    };
+    }, [
+        dispatch
+    ]);
 
-    const handleOrientationChange = ({ alpha, beta, webkitCompassHeading }: OrientationEvent) => {
+    const handleOrientationChange = useCallback(({ alpha, beta, webkitCompassHeading }: OrientationEvent) => {
         if (alpha === null) {
             return;
         }
         requestAnimationFrame(() => {
             dispatch(setOrientation(webkitCompassHeading || alpha, beta));
         });
-    };
+    }, [
+        dispatch
+    ]);
 
-    const handleLocationChange = ({ coords : { latitude, longitude } }: Position) => {
+    const handleLocationChange = useCallback(({ coords : { latitude, longitude } }: Position) => {
         requestAnimationFrame(() => {
             dispatch(setLocation(latitude, longitude));
         });
-    };
+    }, [
+        dispatch
+    ]);
 
-    const handleLocationError = (e: PositionError) => {
+    const handleLocationError = useCallback((e: PositionError) => {
         if (e.code === e.PERMISSION_DENIED) {
             dispatch(setMessage('Geolocation is denied, change your settings and reload the page', true));
         }
-    };
+    }, [
+        dispatch
+    ]);
+
+    // Mount / Dismount
 
     useEffect(() => {
         const eventName = getOrientationEventName();
 
         if (geolocation) {
             dispatch(setMessage('Requesting location'));
-            geolocation.watchPosition(handleLocationChange, handleLocationError);
 
+            geolocation.watchPosition(
+                handleLocationChange,
+                handleLocationError
+            );
             if (eventName) {
                 window.addEventListener(eventName, handleOrientationChange, false);
             }
@@ -93,9 +106,15 @@ const AppContainer: React.FunctionComponent<Props> = () => {
             dispatch(setMessage('Geolocation is not supported by your device', true));
         }
         return () => {
-            eventName && window.removeEventListener(eventName, handleMapLoadedEvent);
+            eventName && window.removeEventListener(eventName, handleOrientationChange);
         };
-    }, []);
+    }, [
+        dispatch,
+        handleOrientationChange,
+        handleLocationError,
+        handleLocationChange,
+        handleMapLoadedEvent,
+    ]);
 
     return (
         <Fragment key="map">

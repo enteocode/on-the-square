@@ -108,8 +108,11 @@ const Map: React.FunctionComponent<Props> = ({ location, venues, orientation, on
     const [ markers, setMarkers ]= useState<Marker[]>([]);
     const [ map, setMap ] = useState<Mapbox>();
     const [ you, setYouMarker ] = useState<Marker>();
+    const [ rendered, setRendered ] = useState<boolean>(false);
 
     const container = useRef<HTMLDivElement>();
+
+    // Handle orientation change
 
     useEffect(() => {
         map && orientation && map.setBearing(360 - orientation.alpha).setPitch(orientation.beta);
@@ -117,6 +120,8 @@ const Map: React.FunctionComponent<Props> = ({ location, venues, orientation, on
         orientation,
         map
     ]);
+
+    // Handle map center
 
     useEffect(() => {
         if (! map || ! you) {
@@ -132,18 +137,33 @@ const Map: React.FunctionComponent<Props> = ({ location, venues, orientation, on
         you
     ]);
 
+    // Handle venue change (trigger Marker redraw)
+
     useEffect(() => {
-        if (! map || ! venues) {
+        venues && setRendered(false);
+    }, [
+        venues
+    ]);
+
+    // Handle Markers
+
+    useEffect(() => {
+        if (! map || ! venues || rendered) {
             return;
         }
+        setRendered(true);
         markers.forEach((marker: Marker) => {
             marker.remove();
         });
         setMarkers(venues.map((venue: Venue): Marker => addMarker(venue, map, createMarkerForVenue(venue))));
     }, [
         venues,
-        map
+        map,
+        markers,
+        rendered
     ]);
+
+    // Handle Mapbox
 
     useEffect(() => {
         if (map || ! container || ! location) {
@@ -155,7 +175,7 @@ const Map: React.FunctionComponent<Props> = ({ location, venues, orientation, on
 
         mapbox.on('load', () => {
             mapbox.addLayer(LAYER_EXTRUSION, getSymbolLayer(mapbox).id);
-            onLoaded();
+            onLoaded && onLoaded();
         });
         mapbox.touchZoomRotate.disableRotation();
 
@@ -165,14 +185,17 @@ const Map: React.FunctionComponent<Props> = ({ location, venues, orientation, on
     }, [
         container,
         map,
-        location
+        location,
+        onLoaded
     ]);
 
     useEffect(() => {
         return () => {
             map && map.remove();
         };
-    }, []);
+    }, [
+        map
+    ]);
 
     return (
         <section className={ style.container } role="presentation">
